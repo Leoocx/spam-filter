@@ -1,0 +1,225 @@
+Funcionamento do Filtro de Spam usando Naive Bayes 
+
+Fluxo do sistema:
+
+Email recebido
+↓
+Pré-processamento (tokenização, limpeza)
+↓
+Classificação com Naive Bayes
+↓
+Resultado: SPAM ou NÃO SPAM
+↓
+Treinamento (atualiza o banco)
+
+---
+
+2. BANCO DE DADOS
+
+Nome do banco:
+spam_filter
+
+Tabela: palavras
+
+CREATE TABLE palavras (
+palavra VARCHAR(100) PRIMARY KEY,
+freq_spam INT DEFAULT 0,
+freq_notSpam INT DEFAULT 0
+);
+
+Tabela: estatisticas
+
+CREATE TABLE estatisticas (
+id INT PRIMARY KEY,
+total_palavras_spam INT,
+total_palavras_notSpam INT,
+total_emails_spam INT,
+total_emails_notSpam INT
+);
+
+---
+
+3. PRÉ-PROCESSAMENTO
+
+Função:
+List<String> preprocessar(String email)
+
+Etapas:
+
+* Converter para minúsculo
+* Remover pontuação
+* Separar palavras (tokenização)
+
+Exemplo:
+"GANHE dinheiro AGORA!!!"
+→ ["ganhe", "dinheiro", "agora"]
+
+---
+
+4. TREINAMENTO
+
+Função:
+void treinar(List<String> palavras, boolean isSpam)
+
+Lógica:
+Para cada palavra:
+
+* Se não existe no banco → inserir
+* Se for spam → incrementar freq_spam
+* Se não for spam → incrementar freq_notSpam
+
+Também atualizar:
+
+* total_palavras_spam
+* total_palavras_notSpam
+* total_emails_spam
+* total_emails_notSpam
+
+---
+
+5. CLASSIFICAÇÃO (NAIVE BAYES)
+
+Função:
+boolean classificar(List<String> palavras)
+
+Cálculo:
+
+P(Spam | palavras) proporcional a:
+P(Spam) * produto de P(palavra | Spam)
+
+P(notSpam | palavras) proporcional a:
+P(notSpam) * produto de P(palavra | notSpam)
+
+Para evitar underflow, usar log:
+
+log_prob_spam = log(P(Spam))
+log_prob_notSpam = log(P(notSpam))
+
+Para cada palavra:
+log_prob_spam += log(P(palavra | Spam))
+log_prob_notSpam += log(P(palavra | notSpam))
+
+Comparar:
+Se log_prob_spam > log_prob_notSpam → SPAM
+Senão → NÃO SPAM
+
+---
+
+6. LAPLACE SMOOTHING (https://towardsdatascience-com.translate.goog/laplace-smoothing-in-naive-bayes-algorithm-9c237a8bdece/?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=pt&_x_tr_pto=tc)
+
+Evita probabilidade zero:
+
+probabilidade = (freq + 1) / (total + vocabSize)
+
+* freq = frequência da palavra
+* total = total de palavras da classe
+* vocabSize = número de palavras únicas
+
+---
+
+7. FLUXO COMPLETO
+
+Receber email
+↓
+Preprocessar
+↓
+Classificar
+↓
+Mostrar resultado
+↓
+Treinar modelo
+
+---
+
+8. ORGANIZAÇÃO DO PROJETO 
+
+/spam-filter
+
+model/
+Palavra.java
+Estatisticas.java
+
+service/
+NaiveBayesService.java
+TreinamentoService.java
+ClassificacaoService.java
+
+repository/
+PalavraRepository.java
+
+util/
+TextProcessor.java
+
+---
+
+9. FUNÇÕES DE CADA CLASSE
+=============================MODEL===========================================
+Palavra
+	Responsabilidade:
+	Guardar os dados de uma palavra no modelo
+
+	texto da palavra
+	frequência em spam
+	frequência em notSpam
+
+obs: Talvez seja interessante pesquisar se existe alguma API que contenha o dicionario da lingua portuguesa e verificar se a palavra recebida está nesse dicionario.
+
+Estatisticas
+	Representa os dados gerais do modelo, ou seja, serve para calcular probabilidades globais ex:P(spam).
+	Responsabilidade:
+	total de palavras em spam
+	total de palavras em notSpam
+	total de emails spam
+	total de emails notSpam
+
+========================REPOSITORY =======================(acesso ao banco)
+PalavraRepository
+	Responsável por tudo que envolve banco de dados para palavras.
+	Responsabilidade:
+
+	Buscar palavra no banco
+	Inserir nova palavra
+	Atualizar frequências
+	Listar palavras 
+
+==================SERVICE ======================================(logica geral)
+
+NaiveBayesService
+	Responsável pela lógica matemática do algoritmo.
+	Responsabilidade:
+	Calcular probabilidades
+	Aplicar log
+	Aplicar smoothing
+	Decidir se é spam ou não
+
+ obs: Essa classe usa os dados do banco, mas não deve acessar diretamente, ou seja, vai apenas chamar metódos do repository. 
+
+TreinamentoService
+
+	Essa classe recebe o email e um indicador se é ou não spam (usar ENUM), com isso, ele lê todo o texto e vai dando update no banco.
+	Responsabilidade:
+
+	Receber palavras + classificação (spam/notSpam)
+	Atualizar frequências no banco
+	Atualizar estatísticas
+
+
+ClassificacaoService
+	Responsabilidade:
+
+	Receber o email
+	Chamar o preprocessamento
+	Chamar o NaiveBayesService
+	Retornar resultado final
+
+ =======================UTILS==================================
+TextProcessor
+	Responsabilidade:
+
+	Limpar texto
+	Tokenizar
+	Normalizar (lowercase, remover pontuação)
+
+
+
+10. DESABAFE AQUI:
