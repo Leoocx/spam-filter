@@ -3,15 +3,20 @@ package service;
 import model.Estatisticas;
 import model.Palavra;
 import repository.PalavraRepository;
+import repository.EstatisticasRepository;
 import java.sql.SQLException;
 import java.util.List;
 
 public class TreinamentoService {
     private PalavraRepository palavraRepository;
+    private EstatisticasRepository estatisticasRepository;
     private Estatisticas estatisticas;
     
-    public TreinamentoService(PalavraRepository palavraRepository, Estatisticas estatisticas) {
+    public TreinamentoService(PalavraRepository palavraRepository, 
+                              EstatisticasRepository estatisticasRepository,
+                              Estatisticas estatisticas) {
         this.palavraRepository = palavraRepository;
+        this.estatisticasRepository = estatisticasRepository;
         this.estatisticas = estatisticas;
     }
     
@@ -38,26 +43,21 @@ public class TreinamentoService {
             }
         }
         
-        // Atualizar estatísticas
+        // Atualizar estatísticas usando o repository
         if (isSpam) {
+            estatisticasRepository.incrementarPalavrasSpam(palavras.size());
+            estatisticasRepository.incrementarEmailsSpam();
+            
+            // Atualizar objeto local
             estatisticas.setTotalPalavrasSpam(estatisticas.getTotalPalavrasSpam() + palavras.size());
             estatisticas.setTotalEmailsSpam(estatisticas.getTotalEmailsSpam() + 1);
         } else {
+            estatisticasRepository.incrementarPalavrasNotSpam(palavras.size());
+            estatisticasRepository.incrementarEmailsNotSpam();
+            
+            // Atualizar objeto local
             estatisticas.setTotalPalavrasNotSpam(estatisticas.getTotalPalavrasNotSpam() + palavras.size());
             estatisticas.setTotalEmailsNotSpam(estatisticas.getTotalEmailsNotSpam() + 1);
-        }
-        
-        atualizarEstatisticasNoBanco();
-    }
-    
-    private void atualizarEstatisticasNoBanco() throws SQLException {
-        String sql = "UPDATE estatisticas SET total_palavras_spam = ?, total_palavras_notSpam = ?, " +
-                     "total_emails_spam = ?, total_emails_notSpam = ? WHERE id = ?";
-        try (java.sql.PreparedStatement stmt = palavraRepository.getClass()
-                .getDeclaredField("connection").get(palavraRepository) == null ? 
-                null : null) {
-            // Nota: Idealmente, você teria um EstatisticasRepository
-            // Por simplicidade, estou mostrando a lógica
         }
     }
 }
