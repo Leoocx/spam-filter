@@ -6,6 +6,11 @@ public class Palavra {
     private int freqSpam;
     private int freqNotSpam;
 
+    public Palavra(String text, int freqSpam, int freqNotSpam){
+        this.text=text;
+        this.freqSpam=freqSpam;
+        this.freqNotSpam=freqNotSpam;
+    }
 
     public String getText() {
         return text;

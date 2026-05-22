@@ -1,9 +1,7 @@
 package service;
 import util.TextProcessor;
-
-import util.TextProcessor;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.ArrayList;
 
 public class ClassificacaoService {
     private NaiveBayesService naiveBayesService;
@@ -20,10 +18,10 @@ public class ClassificacaoService {
     
     public boolean processarEmail(String email, boolean deveTreinar) throws SQLException {
         // Pré-processamento
-        List<String> palavras = textProcessor.processarTexto(email);
+        ArrayList<String> palavras = textProcessor.processarTexto(email);
         
         // Classificação
-        boolean isSpam = naiveBayesService.classificar(palavras);
+        boolean isSpam = naiveBayesService.isSpam(palavras);
         
         // Treinamento (se solicitado)
         if (deveTreinar) {
