@@ -3,18 +3,26 @@
 - Conceito: Encontrar a probabilidade de que cada palavra no email seja spam, e multiplicar essas probabilidades para obter a métrica geral de spam do email, a ser usada na classificação.
 
 ## Organização do Projeto.
-spam-filter/
-├── model/
-│   ├── Palavra.java
-│   └── Estatisticas.java
-├── service/
-│   ├── NaiveBayesService.java
-│   ├── TreinamentoService.java
-│   └── ClassificacaoService.java
-├── repository/
-│   └── PalavraRepository.java
-└── util/
-    └── TextProcessor.java
+```mermaid
+graph TB
+    subgraph "spam-filter"
+        subgraph model
+            Palavra.java
+            Estatisticas.java
+        end
+        subgraph service
+            NaiveBayesService.java
+            TreinamentoService.java
+            ClassificacaoService.java
+        end
+        subgraph repository
+            PalavraRepository.java
+        end
+        subgraph util
+            TextProcessor.java
+        end
+    end
+```
 
 ## Screenshots.
 
