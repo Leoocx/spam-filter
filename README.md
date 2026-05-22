@@ -1,6 +1,6 @@
 # Filtro de Spam Bayesiano.
 - Objetivo: Classificar e-mails como não-spam ou spam.
-- Conceito: Fazemos isso encontrando a probabilidade de que cada palavra no email seja spam, e multiplicamos essas probabilidades para obter a métrica geral de spam do email, a ser usada na classificação.
+- Conceito: Encontrar a probabilidade de que cada palavra no email seja spam, e multiplicar essas probabilidades para obter a métrica geral de spam do email, a ser usada na classificação.
 
 
 ## Screenshots
