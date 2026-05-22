@@ -7,10 +7,6 @@ import java.util.*;
 public class PalavraRepository {
     private Connection connection;
     
-    public PalavraRepository(Connection connection) {
-        this.connection = connection;
-    }
-    
     public Palavra buscarPalavra(String texto) throws SQLException {
         String sql = "SELECT * FROM palavras WHERE palavra = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
