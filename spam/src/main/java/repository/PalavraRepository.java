@@ -6,7 +6,17 @@ import java.util.*;
 
 public class PalavraRepository {
     private Connection connection;
-    
+
+    // usa a conexão padrão do ConnectionManager (SQLite)
+    public PalavraRepository() {
+        this.connection = ConnectionManager.getConnection();
+    }
+
+    // Construtor opcional para uma conexão diferente (POSTGRESQL, MySQL)
+    public PalavraRepository(Connection connection) {
+        this.connection = connection;
+    }
+
     public Palavra buscarPalavra(String texto) throws SQLException {
         String sql = "SELECT * FROM palavras WHERE palavra = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -14,15 +24,15 @@ public class PalavraRepository {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return new Palavra(
-                    rs.getString("palavra"),
-                    rs.getInt("freq_spam"),
-                    rs.getInt("freq_notSpam")
+                        rs.getString("palavra"),
+                        rs.getInt("freq_spam"),
+                        rs.getInt("freq_notSpam")
                 );
             }
         }
         return null;
     }
-    
+
     public void inserirPalavra(Palavra palavra) throws SQLException {
         String sql = "INSERT INTO palavras (palavra, freq_spam, freq_notSpam) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -32,7 +42,7 @@ public class PalavraRepository {
             stmt.executeUpdate();
         }
     }
-    
+
     public void atualizarFrequencias(Palavra palavra) throws SQLException {
         String sql = "UPDATE palavras SET freq_spam = ?, freq_notSpam = ? WHERE palavra = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -42,7 +52,7 @@ public class PalavraRepository {
             stmt.executeUpdate();
         }
     }
-    
+
     public List<Palavra> listarTodasPalavras() throws SQLException {
         List<Palavra> palavras = new ArrayList<>();
         String sql = "SELECT * FROM palavras";
@@ -50,15 +60,15 @@ public class PalavraRepository {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 palavras.add(new Palavra(
-                    rs.getString("palavra"),
-                    rs.getInt("freq_spam"),
-                    rs.getInt("freq_notSpam")
+                        rs.getString("palavra"),
+                        rs.getInt("freq_spam"),
+                        rs.getInt("freq_notSpam")
                 ));
             }
         }
         return palavras;
     }
-    
+
     public int getVocabSize() throws SQLException {
         String sql = "SELECT COUNT(*) as total FROM palavras";
         try (Statement stmt = connection.createStatement()) {

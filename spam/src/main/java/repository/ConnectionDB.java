@@ -12,7 +12,7 @@ public class ConnectionDB {
          public static Connection conectar() {           //PARA CONECTAR AO BANCO DE DADOS SQLite
 
             File dbFile = new File("database.db");
-            boolean bancoExiste = dbFile.exists(); // Verifica se o banco já existe
+            boolean bancoExiste = dbFile.exists();
 
             try {
                 Class.forName("org.sqlite.JDBC");

@@ -4,14 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /*
-* 	Responsabilidade:
-
 	Limpar texto
 	Tokenizar
 	Normalizar (lowercase, remover pontuação)
-*
-*
-*
 */
 public class TextProcessor {
     

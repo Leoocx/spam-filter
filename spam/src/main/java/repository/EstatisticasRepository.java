@@ -5,11 +5,14 @@ import java.sql.*;
 
 public class EstatisticasRepository {
     private Connection connection;
-    
+
+    public EstatisticasRepository() {
+        this.connection = ConnectionManager.getConnection();
+    }
+
     public EstatisticasRepository(Connection connection) {
         this.connection = connection;
     }
-    
     /**
      * Busca as estatísticas do sistema (sempre id = 1)
      */
