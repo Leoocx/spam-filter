@@ -6,6 +6,17 @@ import repository.PalavraRepository;
 import repository.EstatisticasRepository;
 import java.sql.SQLException;
 import java.util.List;
+/**
+ * Essa classe é quem ensina o filtro de spam.
+ * 
+ * Toda vez que um email é classificado (ou quando a gente treina manualmente),
+ * ela atualiza o modelo: 
+ * - Se a palavra é nova, insere no banco com contagem 1.
+ * - Se já existe, aumenta a contagem dela (freqSpam ou freqNotSpam).
+ * - Também mantém os totais gerais de palavras e emails por classe.
+ * 
+ * Basicamente, é aqui que o sistema "aprende" com os exemplos que estão no arquivo csv ou quando se insere manualmente.
+ */
 
 public class TreinamentoService {
     private PalavraRepository palavraRepository;
