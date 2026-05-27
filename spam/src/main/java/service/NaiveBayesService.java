@@ -6,6 +6,28 @@ import repository.PalavraRepository;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Essa classe é quem decide se um email é spam ou não.
+ * 
+ * Ela pega as palavras do email já processadas e calcula as chances de ser spam
+ * usando Bayes.
+ * 
+ * --- por que utilizar os logs? ---
+ * Multiplicar muitas probabilidades (tipo 0.05 * 0.03 * 0.01...) dá números
+ * extremamente pequenos, que o computador acaba arredondando para zero, ou seja, underflow.
+ * Pra evitar, a gente soma os logaritmos dessas probabilidades. Como log(a*b) = log(a)+log(b),
+ * no final comparar a soma dos logs é o mesmo que comparar os produtos originais. Ou seja, ao invés de multiplicarmos as probabilidades, as transformamos em uma soma de logs.
+ * 
+ * --- Laplace smoothing ---
+ * Se uma palavra nunca apareceu em spam (freqSpam = 0), a probabilidade dela seria zero
+ * e mataria a multiplicação toda (qualquer palavra desconhecida tornaria o email "não spam").
+ * O smoothing resolve isso: a gente soma 1 no numerador (freq + 1) e soma o tamanho do
+ * vocabulário no denominador (totalPalavrasClasse + vocabSize). Assim, palavras novas
+ * têm uma chance pequena mas não zero, e palavras com alta frequência continuam relevantes.
+ * 
+ * No final, compara as somas dos logs: se log(Spam) > log(Não Spam), o email é SPAM.
+ */
+
 public class NaiveBayesService {
     private PalavraRepository palavraRepository;
     private Estatisticas estatisticas;
@@ -42,7 +64,7 @@ public class NaiveBayesService {
             logProbNotSpam += Math.log(probNotSpam);
         }
 
-        // Quem tiver maior probabilidade logarítmica vence
+       
         return logProbSpam > logProbNotSpam;
     }
 
