@@ -3,12 +3,12 @@ package model;
 public class Palavra {
     private int id;
     private String text;
-    private int freqSpam;
-    private int freqNotSpam;
+    private int freqSpam;  // Quantas vezes a palavra apareceu em e-mails classificados como spam
+    private int freqNotSpam; // Quantas vezes a palavra apareceu em e-mails classificados como não spam
 
     public Palavra(String text, int freqSpam, int freqNotSpam){
         this.text=text;
-        this.freqSpam=freqSpam;
+        this.freqSpam=freqSpam; 
         this.freqNotSpam=freqNotSpam;
     }
 
