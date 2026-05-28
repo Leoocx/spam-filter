@@ -22,9 +22,10 @@ The classifier uses Bayesian probability to determine whether a message should b
 spam-filter/
 ├── src/
 │   ├── model/
+│   ├── repository/
 │   ├── service/
-│   ├── util/
-│   └── main/
+│   └── util/
+    ├── Main.java    
 ├── dataset.csv
 ├── pom.xml
 └── README.md
