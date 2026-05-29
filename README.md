@@ -86,19 +86,6 @@ Run the application:
 mvn exec:java
 ```
 
-## Example
-
-Input:
-
-```text
-"Congratulations! You won a free iPhone!"
-```
-
-Output:
-
-```text
-SPAM detected with 98.2% probability
-```
 
 
 GitHub: https://github.com/Leoocx
