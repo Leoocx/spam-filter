@@ -60,7 +60,7 @@ spam,"Win a free prize now!"
 ham,"Meeting scheduled for tomorrow."
 ```
 
-## Installation
+## Installation and Execution
 
 Clone the repository:
 
@@ -68,24 +68,16 @@ Clone the repository:
 git clone https://github.com/Leoocx/spam-filter.git
 ```
 
-Access the project directory:
+Open the project in an IDE such as IntelliJ IDEA.
 
-```bash
-cd spam-filter
-```
+The project uses Maven, so the dependencies will be downloaded automatically after opening the project.
 
-Build the project:
+To run the application:
 
-```bash
-mvn clean install
-```
+1. Open the `Main.java` file
+2. Run the `main` method directly from the IDE
 
-Run the application:
-
-```bash
-mvn exec:java
-```
-
+Make sure the `dataset.csv` file is present in the project root directory before execution.
 
 
 GitHub: https://github.com/Leoocx
