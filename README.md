@@ -65,7 +65,7 @@ ham,"Meeting scheduled for tomorrow."
 Clone the repository:
 
 ```bash
-git clone https://github.com/Leoocx/spam-filter.git
+git clone https://github.com/leandersonl/spam-filter.git
 ```
 
 Open the project in an IDE such as IntelliJ IDEA.
